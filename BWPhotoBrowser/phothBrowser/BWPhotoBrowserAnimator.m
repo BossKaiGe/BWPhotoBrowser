@@ -7,9 +7,13 @@
 //
 #import <UIKit/UIKit.h>
 #import "BWPhotoBrowserAnimator.h"
+#import "BWPhotoBrowserCell.h"
+#import "BWPhotoBrowserVC.h"
 #import <UIImageView+WebCache.h>
+#import "BWRootCVC.h"
 @interface BWPhotoBrowserAnimator()<UIViewControllerTransitioningDelegate,UIViewControllerContextTransitioning>
 @property (nonatomic,assign)BOOL isPresented;
+@property (nonatomic,strong) BWRootCVC * collectionCVC;
 @end
 @implementation BWPhotoBrowserAnimator
 bool isPresent = false;
@@ -46,12 +50,25 @@ bool isPresent = false;
     !self.isPresented ? [self presentAnima:transitionContext]:[self dismissAnima:transitionContext] ;
 }
 -(void)dismissAnima:(id <UIViewControllerContextTransitioning>)transitionContext{
+    BWPhotoBrowserVC * fromVC = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+    UIImageView * imageView = fromVC.currentImageView;
     UIView * fromView = [transitionContext viewForKey:UITransitionContextFromViewKey];
+    //直接将frmeView从容器视图中移除
+    [fromView removeFromSuperview];
+    //将图像视图添加到容器视图中
+    [[transitionContext containerView] addSubview:imageView];
+    imageView.frame = self.fullRect;
+    //计算目标位置
+   
+    BWPhotoBrowserCell * cell = (BWPhotoBrowserCell *)[self.collectionCVC.collectionView cellForItemAtIndexPath:fromVC.currentIndexPath];
+    CGRect rect = [self.collectionCVC.collectionView convertRect:cell.frame toCoordinateSpace:[[UIApplication sharedApplication] keyWindow]];
     
     [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
-        fromView.alpha = 0;
+        
+        imageView.frame = rect;
+        //fromView.alpha = 0;
     } completion:^(BOOL finished) {
-        [fromView removeFromSuperview];
+        [imageView removeFromSuperview];
         [transitionContext completeTransition:YES];
     }];
     
@@ -90,11 +107,12 @@ bool isPresent = false;
 //    }];
 }
 
--(void)prepareForBrowser:(NSString *)url : (CGRect) rect : (CGRect) fullRect
+-(void)prepareForBrowser:(NSString *)url : (CGRect) rect : (CGRect) fullRect :(BWRootCVC *)collectionCVC
 {
     self.url = url;
     self.rect = rect;
     self.fullRect = fullRect;
+    self.collectionCVC = collectionCVC;
     
     self.imageView.frame = rect;
     [self.imageView sd_setImageWithURL:url];

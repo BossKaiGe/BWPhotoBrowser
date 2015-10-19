@@ -81,7 +81,8 @@ static NSString * const reuseIdentifier = @"Cell";
     [[NSNotificationCenter defaultCenter] postNotificationName:@"imageList" object:params];
     //制定动画的提供者
     photoBrowserVC.transitioningDelegate = self.photoBrowserAnimator;
-    [self.photoBrowserAnimator prepareForBrowser:self.iconList[indexPath.item] :rect :fullRect];
+    [self.photoBrowserAnimator prepareForBrowser:self.iconList[indexPath.item] :rect :fullRect :self];
+   // [self.photoBrowserAnimator prepareForBrowser:self.iconList[indexPath.item] :rect :fullRect];
    
     photoBrowserVC.modalPresentationStyle = UIModalPresentationCustom;
     [self presentViewController:photoBrowserVC animated:YES completion:nil];

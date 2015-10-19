@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "BWRootCVC.h"
 //提供从控制器到照片浏览器的转场动画
 
 @interface BWPhotoBrowserAnimator : NSObject
@@ -19,5 +20,8 @@
 //动画播放图像视图
 @property (nonatomic,strong) UIImageView * imageView;
 
--(void)prepareForBrowser:(NSString *)url : (CGRect) rect : (CGRect) fullRect;
+
+
+-(void)prepareForBrowser:(NSString *)url : (CGRect) rect : (CGRect) fullRect :(BWRootCVC *)collectionCVC;
+
 @end

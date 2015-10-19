@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface BWPhotoBrowserVC : UIViewController
-
+@property (nonatomic,strong)NSIndexPath * currentIndexPath;
+@property (nonatomic,strong)UIImageView * currentImageView;
 @end

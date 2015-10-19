@@ -18,6 +18,7 @@
 @property (nonatomic,strong)BWPhotoBrowserView * collectionView;
 @property (nonatomic,strong) UIPageControl * pageControl;
 @property (nonatomic,strong)NSIndexPath * indexPath;
+
 @end
 
 @implementation BWPhotoBrowserVC
@@ -57,13 +58,14 @@
     }];
 }
 
+
 -(void)saveImage
 {
-    NSIndexPath * indexPath = [self.collectionView.indexPathsForVisibleItems lastObject];
+//    NSIndexPath * indexPath = [self.collectionView.indexPathsForVisibleItems lastObject];
+//    
+//    BWPhotoBrowserCell * cell = [self.collectionView cellForItemAtIndexPath:indexPath];
     
-    BWPhotoBrowserCell * cell = [self.collectionView cellForItemAtIndexPath:indexPath];
-    
-    UIImage * image = cell.imageView.image;
+    UIImage * image = self.currentImageView.image;
     
     if (image == nil) {
         [SVProgressHUD showInfoWithStatus:@"没有图像"];
@@ -179,4 +181,28 @@
     }
     return _pageControl;
 }
+-(NSIndexPath *)currentIndexPath
+{
+    if (_currentIndexPath == nil) {
+        _currentIndexPath = [[self.collectionView indexPathsForVisibleItems]lastObject];
+    }
+    return _currentIndexPath;
+}
+
+-(UIImageView *)currentImageView
+{
+    if (_currentImageView == nil) {
+        BWPhotoBrowserCell * cell = (BWPhotoBrowserCell *)[self.collectionView cellForItemAtIndexPath:self.currentIndexPath];
+        _currentImageView = cell.imageView;
+    }
+    return  _currentImageView;
+}
+
+
+
+
+
+
+
+
 @end
